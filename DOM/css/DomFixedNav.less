@@ -1,0 +1,12 @@
+.dom-fixed-nav {
+  transition: .3s;
+  &.nav-in-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  &.nav-is-hidden {
+    transform: translateY(-100%);
+  }
+}

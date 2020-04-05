@@ -1,0 +1,62 @@
+.accordion-head {
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: #c51b31;
+    .accordion-ico .ico {
+      &:after,
+      &:before {
+        background-color: #c51b31;
+      }
+    }
+  }
+}
+
+.accordion-ico {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  .ico {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    &:after,
+    &:before {
+      transition: 0.3s;
+      content: "";
+      position: absolute;
+      background-color: #121212;
+      transition: 0.3s;
+      display: block;
+      opacity: 0.8;
+    }
+    &:before {
+      height: 2px;
+      width: 100%;
+      top: calc(50% - 1px);
+      left: 0;
+    }
+    &:after {
+      width: 2px;
+      height: 100%;
+      top: 0;
+      left: calc(50% - 1px);
+    }
+  }
+}
+
+.accordion-head.active {
+  .accordion-ico .ico:after {
+    height: 0;
+    opacity: 0;
+    transform-origin: center center;
+    top: 50%;
+  }
+}

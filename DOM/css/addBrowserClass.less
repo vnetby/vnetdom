@@ -1,0 +1,192 @@
+.js-helper {
+  animation-duration: 0s;
+  position: fixed;
+  left: -100%;
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+}
+
+@keyframes jshelper-orientation-potrait {
+  0% {
+    z-index: 10;
+  }
+  100% {
+    z-index: 10;
+  }
+}
+@keyframes jshelper-orientation-landscape {
+  0% {
+    z-index: 20;
+  }
+  100% {
+    z-index: 20;
+  }
+}
+///////////////////////////////////////////////////////////
+@keyframes jshelper-touch {
+  0% {
+    z-index: 10;
+  }
+  100% {
+    z-index: 10;
+  }
+}
+@keyframes jshelper-notouch {
+  0% {
+    z-index: 20;
+  }
+  100% {
+    z-index: 20;
+  }
+}
+/////////////////////////////////////////////////////////
+@keyframes jshelper-device-type-iphone {
+  0% {
+    z-index: 20;
+  }
+  100% {
+    z-index: 20;
+  }
+}
+@keyframes jshelper-device-type-ipad {
+  0% {
+    z-index: 20;
+  }
+  100% {
+    z-index: 20;
+  }
+}
+
+/*==============================================================
+*   										DETECT ORIENTATION
+=============================================================== */
+
+@media (orientation: portrait) {
+  .js-helper-orientation {
+    animation-name: jshelper-orientation-potrait;
+  }
+}
+
+@media (orientation: landscape) {
+  .js-helper-orientation {
+    animation-name: jshelper-orientation-landscape;
+  }
+}
+
+/*==============================================================
+*												   DETECT TOUCH
+=============================================================== */
+.js-helper-touch {
+  animation-name: jshelper-touch;
+}
+
+@media (hover), (min-width: 0\0), (min--moz-device-pixel-ratio: 0) {
+  .js-helper-touch {
+    animation-name: jshelper-notouch;
+  }
+}
+
+/*==============================================================
+*												  DEVICE BRAND
+=============================================================== */
+@media (max-device-width: 1334px) and (min-device-width: 133.9px) and (max-device-height: 750px) and (min-device-height: 749.9px) {
+  .js-helper-device-type {
+    animation-name: jshelper-device-type-iphone;
+  }
+}
+/* iPads (вертикальная и горизонтальная) ----------- */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .js-helper-device-type {
+    animation-name: jshelper-device-type-ipad;
+  }
+}
+/* iPads (горизонтальная) ----------- */
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .js-helper-device-type {
+    animation-name: jshelper-device-type-ipad;
+  }
+}
+/* iPads (вертикальная) ----------- */
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .js-helper-device-type {
+    animation-name: jshelper-device-type-ipad;
+  }
+}
+/* iPad 3**********/
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+  .js-helper-device-type {
+    animation-name: jshelper-device-type-ipad;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+  .js-helper-device-type {
+    animation-name: jshelper-device-type-ipad;
+  }
+}
+
+/* Настольные компьютеры и ноутбуки ----------- */
+@media only screen and (min-width: 1224px) {
+  /* стили */
+}
+
+/* Большие экраны ----------- */
+@media only screen and (min-width: 1824px) {
+  /* стили */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (min-width: 320px) and (max-width: 480px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+  /* стили */
+}
+@media only screen and (min-width: 320px) and (max-width: 480px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+  /* стили */
+}
+
+/* iPhone 5 ----------- */
+@media only screen and (min-width: 320px) and (max-height: 568px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+@media only screen and (min-width: 320px) and (max-height: 568px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+
+/* iPhone 6 ----------- */
+@media only screen and (min-width: 375px) and (max-height: 667px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+@media only screen and (min-width: 375px) and (max-height: 667px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+
+/* iPhone 6+ ----------- */
+@media only screen and (min-width: 414px) and (max-height: 736px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+@media only screen and (min-width: 414px) and (max-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+
+/* Samsung Galaxy S3 ----------- */
+@media only screen and (min-width: 320px) and (max-height: 640px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+@media only screen and (min-width: 320px) and (max-height: 640px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+  /* стили */
+}
+
+/* Samsung Galaxy S4 ----------- */
+@media only screen and (min-width: 320px) and (max-height: 640px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+  /* стили */
+}
+@media only screen and (min-width: 320px) and (max-height: 640px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
+  /* стили */
+}
+
+/* Samsung Galaxy S5 ----------- */
+@media only screen and (min-width: 360px) and (max-height: 640px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+  /* стили */
+}
+@media only screen and (min-width: 360px) and (max-height: 640px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
+  /* стили */
+}
