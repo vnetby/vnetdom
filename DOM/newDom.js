@@ -7,34 +7,17 @@ class newDOM {
 
     this.isDev = true;
 
-    let data = {
-      name: 'vadzim',
-      sirname: 'kananovich'
-    }
+    this.css(this.body, { height: '500vh' });
 
-    let str = `
-    <div class="vadzim">
-      <ul>
-        <li>{{name}}</li>
-        <li>other value</li>
-      </ul>
-    </div>
-    <div class="second container">
-      second {{name}} {{sirname}}
-    </div>
-    some text node
-    my name is vadzim
-    i am cool
-    <script>
-      console.log('vadzim');
-    </script>
-    `;
+    this.css('.col', { width: '30px', height: '30px', backgroundColor: 'red', margin: '30px', cursor: 'pointer' });
+    this.css(this.body, { paddingTop: '200vh', paddingBottom: '200vh' });
+    let c = this.findFirst('.container');
+    this.css(c, { backgroundColor: 'green' });
 
-    let res = this.strToDom(str, data);
-
-    console.log(res);
-
-    this.execInlineScripts('.container');
+    console.log(this.isInViewport(c));
+    this.window.addEventListener('scroll', e => {
+      console.log(this.isInViewport(c));
+    });
   }
 
 
@@ -225,15 +208,361 @@ class newDOM {
 
 
 
+  next(el) {
+    try {
+      el = this.getElement(el);
+      let next = el.nextSibling;
+      while (next && !this.isDom(next)) {
+        next = next.nextSibling;
+      }
+      return this.isDom(next) ? next : false;
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  prev(el) {
+    try {
+      el = this.getElement(el);
+      let prev = el.previousSibling;
+      while (prev && !this.isDom(prev)) {
+        prev = prev.previousSibling;
+      }
+      return this.isDom(prev) ? prev : false;
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+
+  getElement(el, container) {
+    if (!el) return false;
+    try {
+      container = this.getContainer(container);
+      if (this.isDom(el)) return el;
+      el = this.findFirst(el);
+      return el ? el : false;
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  css(el, style = {}) {
+    try {
+      this.getDomArray(el).forEach(item => {
+        let css = '';
+        for (let key in style) {
+          css += css ? ' ' : '';
+          css += `${this.__fromCamelCase(key)}: ${style[key]};`;
+        }
+        css = css.trim();
+        item.setAttribute('style', css);
+      });
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+  addCss(el, style) {
+    try {
+      this.getDomArray(el).forEach(item => {
+        let css = item.getAttribute('style');
+        css = css ? css : '';
+        for (let key in style) {
+          let prop = this.__fromCamelCase(key);
+          css = css.replace(new RegExp(`[\s]*${prop}[^;]*[;]*`, 'g'), '');
+          css += css ? '' : ' ';
+          css += `${prop}: ${style[key]};`;
+        }
+        css = css.trim();
+        item.setAttribute('style', css);
+      });
+    } catch (e) {
+      this.__throwError(e);
+    }
+  }
+
+
+
+
+  hasCss(el, prop) {
+    el = this.getElement(el);
+    if (!el) return false;
+    try {
+      return !!el.style[this.__fromCamelCase(prop)];
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  getCss(el, prop) {
+    el = this.getElement(el);
+    if (!el) return false;
+    try {
+      let res = el.style[this.__fromCamelCase(prop)];
+      return res ? res : false;
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  getStyle(el, prop) {
+    el = this.getElement(el);
+    if (!el) return false;
+    try {
+      let style = this.window.getComputedStyle(el);
+      let res = style[prop];
+      return res ? res : false;
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  setAttr(el, attrs = {}) {
+    try {
+      this.getDomArray(el).forEach(item => {
+        for (let key in attrs) {
+          let attrName = this.__getAttrName(key);
+          item.setAttribute(attrName, attrs[key]);
+        }
+      });
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  dispatch(el, e, sets = {}) {
+    let realSets = {
+      bubbles: false, cancelable: false, detail: undefined, ...sets
+    };
+    let ev = new CustomEvent(e, realSets);
+    el.dispatchEvent(ev);
+  }
+
+
+
+
+  ajax({ url, data, preloader, timeout, minTimeResponse, preloaderHTML }) {
+    timeout = timeout ? timeout : 0;
+    minTimeResponse = minTimeResponse ? minTimeResponse : 0;
+
+    let type = data ? "post" : "get";
+
+    let requestData;
+
+    if (typeof data === "object") {
+      if (data instanceof FormData) {
+        requestData = data;
+      } else {
+        requestData = new FormData();
+        for (let key in data) {
+          requestData.append(key, data[key]);
+        }
+      }
+    }
+
+    if (preloader) {
+      this.addPreloader(preloader, preloaderHTML);
+    }
+
+
+
+    return new Promise((resolve, reject) => {
+
+      setTimeout(() => {
+        let countTime = 0;
+
+        let interval = setInterval(() => {
+          countTime++;
+        }, 1);
+
+        let http = new XMLHttpRequest();
+
+        http.open(type, url);
+        http.send(requestData);
+
+
+        http.onreadystatechange = () => {
+
+          if (http.readyState === 4 && http.status === 200) {
+            if (countTime < minTimeResponse) {
+              let lastTime = minTimeResponse - countTime;
+              setTimeout(() => {
+                clearInterval(interval);
+                if (preloader) {
+                  this.removePreloader(preloader);
+                }
+                resolve(http.responseText);
+              }, lastTime);
+
+            } else {
+              clearInterval(interval);
+              if (preloader) {
+                this.removePreloader(preloader);
+              }
+              resolve(http.responseText);
+            }
+          }
+
+        };
+      }, timeout);
+
+
+    });
+  }
+
+
+
+
+  addPreloader(container, preloaderHTML) {
+    if (!preloaderHTML) return;
+    container = this.getContainer(container);
+
+    let existPreloader = this.findFirst('.ajax-preloader', container);
+
+    if (!existPreloader) {
+      existPreloader = prelaoderHTML;
+      container.appendChild(preloaderHTML);
+    }
+
+    dom.addClass(preloaderHTML, 'visible');
+  }
+
+
+
+
+  removePreloader(container) {
+    container = this.getContainer(container);
+    let preloader = dom.fidnFirst('.ajax-preloader', container);
+    if (!preloader) return;
+    this.removeClass(preloader, 'visible');
+  }
+
+
+
+
+  createRequestDataString(data) {
+    if (!data) return null;
+    let str = "";
+    Object.keys(data).forEach((key, i) => {
+      let val = data[key];
+      if (!i) {
+        str += `${key}=${val}`;
+      } else {
+        str += `&${key}=${val}`;
+      }
+    });
+    return str;
+  }
+
+
+
+
+  addClass(el, className) {
+    if (!className) return false;
+    try {
+      className = className.split(' ').map(name => name.trim());
+      this.getDomArray(el).forEach(item => {
+        className.forEach(newClass => {
+          if (item.classList.contains(newClass)) return;
+          item.classList.add(newClass);
+        });
+      });
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+  }
+
+
+
+
+  removeClass(el, className) {
+    if (!className) return false;
+    try {
+      className = className.split(' ').map(name => name.trim());
+      this.getDomArray(el).forEach(item => {
+        className.forEach(newClass => {
+          if (!item.classList.contains(newClass)) return;
+          item.classList.remove(newClass);
+        });
+      });
+    } catch (e) {
+      this.__throwError(e);
+    }
+  }
+
+
+
+  isInViewport(el, margin = 200) {
+    el = this.getElement(el);
+    if (!el) return false;
+    try {
+      let scroll = this.window.pageYOffset;
+      let elTop = el.getBoundingClientRect().top;
+      let elHeight = el.offsetHeight;
+      let windowHeight = this.window.innerHeight;
+
+      let top = elTop + scroll - margin - windowHeight;
+
+      let bottom = elTop + scroll + elHeight + margin;
+
+      return scroll >= top && scroll <= bottom;
+
+    } catch (e) {
+      this.__throwError(e);
+      return false;
+    }
+
+  }
+
+
+
+
+
+
+
+
 
   //============================================
   //              CONDITIONALS
   //============================================
   isDom(el) {
-    return typeof el === 'object' && el.tagName;
+    return el && typeof el === 'object' && el.tagName;
   }
   isDomArray(elsArr) {
-    return typeof elsArr === 'array' && elsArr.every(el => this.isDom(el));
+    return typeof elsArr === 'object' && elsArr.length && elsArr.every(el => this.isDom(el));
   }
   isSelector(el) {
     return el && typeof el === 'string';
@@ -249,7 +578,12 @@ class newDOM {
   __getAttrName(attr) {
     if (!attr) return false;
     if (attr === 'className') return 'class';
-    return attr.replace(/\.?([A-Z])/g, (x, y) => "-" + y.toLowerCase()).replace(/^-/, "");
+    return this.__fromCamelCase(attr);
+  }
+
+  __fromCamelCase(str) {
+    if (!str) return false;
+    return str.replace(/\.?([A-Z])/g, (x, y) => "-" + y.toLowerCase()).replace(/^-/, "");
   }
 
   __throwError(e) {
@@ -257,19 +591,13 @@ class newDOM {
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
 
 
 
