@@ -7,11 +7,11 @@
 <hr>
 <h4>dom functions</h4>
 <ul>
-  <li><strong>getDomArray</strong> &mdash; </li>
-  <li><strong>findFirst</strong> &mdash; </li>
-  <li><strong>findAll</strong> &mdash; </li>
-  <li><strong>getContainer</strong> &mdash; </li>
-  <li><strong>strToDom</strong> &mdash; </li>
-  <li><strong>execInlineScripts</strong> &mdash; </li>
-  <li><strong>create</strong> &mdash; </li>
+  <li><strong>dom.getDomArray()</strong> &mdash; </li>
+  <li><strong>dom.findFirst()</strong> &mdash; </li>
+  <li><strong>dom.findAll()</strong> &mdash; </li>
+  <li><strong>dom.getContainer()</strong> &mdash; </li>
+  <li><strong>dom.strToDom()</strong> &mdash; </li>
+  <li><strong>dom.execInlineScripts()</strong> &mdash; </li>
+  <li><strong>dom.create()</strong> &mdash; </li>
 </ul>
