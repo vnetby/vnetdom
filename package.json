@@ -1,7 +1,7 @@
 {
-  "name": "belrabota",
+  "name": "vnet-dom",
   "version": "1.0.0",
-  "description": "belrabota",
+  "description": "small class for js development",
   "main": "index.js",
   "scripts": {
     "webpack-dev": "webpack",

@@ -1,7 +1,7 @@
-import { setWindowResponsive } from "./domWindowResponsive.js";
-import { addBrowserClass } from "./domBrowserDetect.js";
+import { addBrowserClass } from "./domAddBrowserClass.js";
 
-export const domStart = () => {
+const domStart = () => {
   addBrowserClass();
-  setWindowResponsive();
 }
+
+export default domStart;
