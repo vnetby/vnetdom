@@ -1,9 +1,9 @@
 <h1>VNET DOM</h1>
 
 <h4>USAGE</h4>
-1 - npm install vnet-dom
+1 - <strong>npm install vnet-dom</strong>
 <br>
-2 - import dom from "vnet-dom/DOM/DOM";
+2 - import <strong>dom</strong> from "<strong>vnet-dom/DOM/DOM</strong>";
 <hr>
 <h4>methods</h4>
 <ul>
