@@ -1,4 +1,4 @@
-import { dom } from "./";
+import dom from "./DOM";
 
 const CONTAINER_CLASS = 'dom-tabs';
 const LINK_CLASS = 'tab-link';

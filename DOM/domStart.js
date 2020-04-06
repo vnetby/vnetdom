@@ -1,6 +1,6 @@
 import { addBrowserClass } from "./domAddBrowserClass.js";
 
-const domStart = () => {
+domStart = () => {
   addBrowserClass();
 }
 

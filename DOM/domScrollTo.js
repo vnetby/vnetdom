@@ -1,4 +1,4 @@
-import { dom } from "./";
+import dom from "./DOM";
 
 const LINK_CLASS = 'dom-scroll-to';
 const LINK_ATTR = 'scroll-to';
