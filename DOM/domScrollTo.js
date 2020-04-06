@@ -1,7 +1,11 @@
+import { dom } from "./";
+
 const LINK_CLASS = 'dom-scroll-to';
 const LINK_ATTR = 'scroll-to';
 const SPEED_ATTR = 'scroll-speed';
 const SCROLL_SPEED = 500;
+
+
 
 
 export const domScrollTo = wrap => {
