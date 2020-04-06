@@ -566,6 +566,26 @@ class DOM {
 
 
 
+  onClick(selector, fn, where) {
+    this.getDomArray(selector, where).forEach(item => {
+      item.addEventListener('click', fn);
+    });
+  }
+
+  onChange(selector, fn, where) {
+    this.getDomArray(selector, where).forEach(item => {
+      item.addEventListener('change', fn);
+    });
+  }
+
+  onMouseenter(selector, fn, where) {
+    this.getDomArray(selector, where).forEach(item => {
+      item.addEventListener('mouseenter', fn);
+    });
+  }
+
+
+
 
 
 
