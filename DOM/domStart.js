@@ -1,7 +1,5 @@
 import { addBrowserClass } from "./domAddBrowserClass.js";
 
-domStart = () => {
+export const domStart = () => {
   addBrowserClass();
 }
-
-export default domStart;

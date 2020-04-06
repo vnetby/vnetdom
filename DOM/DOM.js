@@ -614,4 +614,4 @@ class DOM {
 
 
 const dom = new DOM;
-export default dom;
+export { dom };
