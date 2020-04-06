@@ -27,13 +27,6 @@ class DOM {
     this.window = window;
 
     this.isDev = true;
-
-    this.css(this.body, { height: '500vh' });
-
-    this.css('.col', { width: '30px', height: '30px', backgroundColor: 'red', margin: '30px', cursor: 'pointer' });
-    this.css(this.body, { paddingTop: '200vh', paddingBottom: '200vh' });
-    let c = this.findFirst('.container');
-    this.css(c, { backgroundColor: 'green' });
   }
 
 
