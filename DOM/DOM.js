@@ -577,6 +577,16 @@ class DOM {
     });
   }
 
+  onWindowScroll(fn) {
+    let timer;
+    this.window.addEventListener('scroll', e => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn(e);
+      }, 5);
+    });
+  }
+
 
 
 
