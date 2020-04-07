@@ -587,6 +587,16 @@ class DOM {
     });
   }
 
+  onWindowResize(fn) {
+    let timer;
+    this.window.addEventListener('resize', e => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn(e);
+      }, 5);
+    })
+  }
+
 
 
 
