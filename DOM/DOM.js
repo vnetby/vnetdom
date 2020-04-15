@@ -461,7 +461,7 @@ class DOM {
     let existPreloader = this.findFirst('.ajax-preloader', container);
 
     if (!existPreloader) {
-      existPreloader = prelaoderHTML;
+      existPreloader = preloaderHTML;
       container.appendChild(preloaderHTML);
     }
 
