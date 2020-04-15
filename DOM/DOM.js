@@ -473,7 +473,7 @@ class DOM {
 
   removePreloader(container) {
     container = this.getContainer(container);
-    let preloader = dom.fidnFirst('.ajax-preloader', container);
+    let preloader = dom.findFirst('.ajax-preloader', container);
     if (!preloader) return;
     this.removeClass(preloader, 'visible');
   }
