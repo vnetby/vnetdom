@@ -373,7 +373,7 @@ class DOM {
 
   dispatch(el, e, sets = {}) {
     let realSets = {
-      bubbles: false, cancelable: false, detail: undefined, ...sets
+      bubbles: true, cancelable: true, detail: undefined, ...sets
     };
     let ev = new CustomEvent(e, realSets);
     el.dispatchEvent(ev);
