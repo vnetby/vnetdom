@@ -534,6 +534,27 @@ class DOM {
 
 
 
+
+  toggleClass(el, className) {
+    if (!className) return false;
+    try {
+      className = className.split(' ').map(name => name.trim());
+      this.getDomArray(el).forEach(item => {
+        className.forEach(newClass => {
+          if (!item.classList.contains(newClass)) {
+            item.classList.add(newClass);
+          } else {
+            item.classList.remove(newClass);
+          }
+        });
+      });
+    } catch (e) {
+      this.__throwError(e);
+    }
+  }
+
+
+
   isInViewport(el, margin = 200) {
     el = this.getElement(el);
     if (!el) return false;
