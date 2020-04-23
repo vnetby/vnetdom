@@ -27,6 +27,8 @@ class DOM {
     this.window = window;
 
     this.isDev = true;
+
+    this.__initBodyClick();
   }
 
 
@@ -658,6 +660,38 @@ class DOM {
 
   __throwError(e) {
     this.isDev && console.error(e);
+  }
+
+  __initBodyClick() {
+    this.body.addEventListener('click', this.__parseBodyClick.bind(this));
+  }
+
+  __parseBodyClick(e) {
+    let target;
+
+    if (target = this.__eventPathHasAttribute(e, 'data-prevent-default')) {
+      e.preventDefault();
+    }
+
+    if (target = this.__eventPathHasAttribute(e, 'data-click-event')) {
+      this.dispatch(target, target.dataset.clickEvent);
+    }
+
+    if (target = this.__eventPathHasAttribute(e, 'data-toggle-class')) {
+      this.toggleClass(target, target.dataset.toggleClass);
+    }
+  }
+
+  __eventPathHasAttribute(e, attr) {
+    if (!e.path) return false;
+    let total = e.path.length;
+    if (!total) return false;
+    for (let i = 0; i < total; i++) {
+      let item = e.path[i];
+      if (!item || !item.tagName) continue;
+      if (item.hasAttribute(attr)) return item;
+    }
+    return false;
   }
 
 }
