@@ -1,6 +1,6 @@
 {
   "name": "vnet-dom",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "small class for js development",
   "main": "index.js",
   "scripts": {
