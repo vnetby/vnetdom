@@ -680,6 +680,24 @@ class DOM {
     if (target = this.__eventPathHasAttribute(e, 'data-toggle-class')) {
       this.toggleClass(target, target.dataset.toggleClass);
     }
+
+    if (target = this.__eventPathHasClass(e, 'material-btn')) {
+      this.__materialBtn(e, target);
+    }
+  }
+
+  __materialBtn(e, target) {
+    let inkEl = this.findFirst('.ink', target);
+    if (inkEl) {
+      this.removeClass(inkEl, 'animate');
+    } else {
+      inkEl = this.create('span', 'ink');
+      let size = Math.max(target.offsetWidth, target.offsetHeight);
+      this.css(inkEl, { width: `${size}px`, height: `${size}px` });
+      target.appendChild(inkEl);
+    }
+    this.addCss(inkEl, { left: `${e.offsetX - inkEl.offsetWidth / 2}px`, top: `${e.offsetY - inkEl.offsetHeight / 2}px` });
+    this.addClass(inkEl, 'animate');
   }
 
   __eventPathHasAttribute(e, attr) {
@@ -690,6 +708,18 @@ class DOM {
       let item = e.path[i];
       if (!item || !item.tagName) continue;
       if (item.hasAttribute(attr)) return item;
+    }
+    return false;
+  }
+
+  __eventPathHasClass(e, className) {
+    if (!e.path) return false;
+    let total = e.path.length;
+    if (!total) return false;
+    for (let i = 0; i < total; i++) {
+      let item = e.path[i];
+      if (!item || !item.tagName) continue;
+      if (item.classList.contains(className)) return item;
     }
     return false;
   }

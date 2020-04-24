@@ -1,12 +1,13 @@
 {
   "name": "vnet-dom",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "small class for js development",
   "main": "index.js",
   "scripts": {
     "webpack-dev": "webpack",
     "webpack-build": "webpack --env=build",
-    "update-git": "git add . && git commit -m update && git push origin master"
+    "update-git": "git add . && git commit -m update && git push origin master",
+    "publish-npm": "npm publish"
   },
   "author": "Vadzim Kananovich",
   "license": "ISC",
