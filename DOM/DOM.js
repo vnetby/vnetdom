@@ -385,6 +385,32 @@ class DOM {
 
 
 
+  jsonStringify(obj) {
+    let res = false;
+    try {
+      res = JSON.stringify(obj);
+    } catch (err) {
+      this.__throwError(err);
+    }
+    return res;
+  }
+
+
+
+
+  jsonParse(str) {
+    let res = false;
+    try {
+      res = JSON.parse(str);
+    } catch (err) {
+      this.__throwError(err);
+    }
+    return res;
+  }
+
+
+
+
   ajax({ url, data, preloader, timeout, minTimeResponse, preloaderHTML }) {
     timeout = timeout ? timeout : 0;
     minTimeResponse = minTimeResponse ? minTimeResponse : 0;
