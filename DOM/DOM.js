@@ -271,9 +271,9 @@ class DOM {
 
 
 
-  css(el, style = {}) {
+  css(el, style = {}, container) {
     try {
-      this.getDomArray(el).forEach(item => {
+      this.getDomArray(el, container).forEach(item => {
         let css = '';
         for (let key in style) {
           css += css ? ' ' : '';
@@ -290,9 +290,9 @@ class DOM {
 
 
 
-  addCss(el, style) {
+  addCss(el, style, container) {
     try {
-      this.getDomArray(el).forEach(item => {
+      this.getDomArray(el, container).forEach(item => {
         let css = item.getAttribute('style');
         css = css ? css : '';
         for (let key in style) {
@@ -357,9 +357,9 @@ class DOM {
 
 
 
-  setAttr(el, attrs = {}) {
+  setAttr(el, attrs = {}, container) {
     try {
-      this.getDomArray(el).forEach(item => {
+      this.getDomArray(el, container).forEach(item => {
         for (let key in attrs) {
           let attrName = this.__getAttrName(key);
           item.setAttribute(attrName, attrs[key]);
@@ -501,11 +501,11 @@ class DOM {
 
 
 
-  addClass(el, className) {
+  addClass(el, className, container) {
     if (!className) return false;
     try {
       className = className.split(' ').map(name => name.trim());
-      this.getDomArray(el).forEach(item => {
+      this.getDomArray(el, container).forEach(item => {
         className.forEach(newClass => {
           if (item.classList.contains(newClass)) return;
           item.classList.add(newClass);
@@ -520,11 +520,11 @@ class DOM {
 
 
 
-  removeClass(el, className) {
+  removeClass(el, className, container) {
     if (!className) return false;
     try {
       className = className.split(' ').map(name => name.trim());
-      this.getDomArray(el).forEach(item => {
+      this.getDomArray(el, container).forEach(item => {
         className.forEach(newClass => {
           if (!item.classList.contains(newClass)) return;
           item.classList.remove(newClass);
