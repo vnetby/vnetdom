@@ -537,6 +537,24 @@ class DOM {
 
 
 
+  getEventPath(e) {
+    if (e.path && e.path.length) return e.path;
+    let res = [];
+
+    let item = e.target;
+    res.push(item);
+
+    while (item = item.parentNode) {
+      if (typeof item !== 'object' || !item.tagName) continue;
+      res.push(item);
+      if (item.tagName === 'BODY') break;
+    }
+    return res;
+  }
+
+
+
+
   toggleClass(el, className) {
     if (!className) return false;
     try {
@@ -668,20 +686,21 @@ class DOM {
 
   __parseBodyClick(e) {
     let target;
+    let path = this.getEventPath(e);
 
-    if (target = this.__eventPathHasAttribute(e, 'data-prevent-default')) {
+    if (target = this.__eventPathHasAttribute(path, 'data-prevent-default')) {
       e.preventDefault();
     }
 
-    if (target = this.__eventPathHasAttribute(e, 'data-click-event')) {
+    if (target = this.__eventPathHasAttribute(path, 'data-click-event')) {
       this.dispatch(target, target.dataset.clickEvent);
     }
 
-    if (target = this.__eventPathHasAttribute(e, 'data-toggle-class')) {
+    if (target = this.__eventPathHasAttribute(path, 'data-toggle-class')) {
       this.toggleClass(target, target.dataset.toggleClass);
     }
 
-    if (target = this.__eventPathHasClass(e, 'material-btn')) {
+    if (target = this.__eventPathHasClass(path, 'material-btn')) {
       this.__materialBtn(e, target);
     }
   }
@@ -700,24 +719,24 @@ class DOM {
     this.addClass(inkEl, 'animate');
   }
 
-  __eventPathHasAttribute(e, attr) {
-    if (!e.path) return false;
-    let total = e.path.length;
+  __eventPathHasAttribute(path, attr) {
+    let total = path.length;
     if (!total) return false;
+
     for (let i = 0; i < total; i++) {
-      let item = e.path[i];
+      let item = path[i];
       if (!item || !item.tagName) continue;
       if (item.hasAttribute(attr)) return item;
     }
     return false;
   }
 
-  __eventPathHasClass(e, className) {
-    if (!e.path) return false;
-    let total = e.path.length;
+  __eventPathHasClass(path, className) {
+    let total = path.length;
     if (!total) return false;
+
     for (let i = 0; i < total; i++) {
-      let item = e.path[i];
+      let item = path[i];
       if (!item || !item.tagName) continue;
       if (item.classList.contains(className)) return item;
     }
