@@ -29,6 +29,7 @@ class DOM {
     this.isDev = true;
 
     this.__initBodyClick();
+    this.__initBodyChange();
   }
 
 
@@ -684,6 +685,10 @@ class DOM {
     this.body.addEventListener('click', this.__parseBodyClick.bind(this));
   }
 
+  __initBodyChange() {
+    this.body.addEventListener('change', this.__parseBodyChange.bind(this));
+  }
+
   __parseBodyClick(e) {
     let target;
     let path = this.getEventPath(e);
@@ -702,6 +707,19 @@ class DOM {
 
     if (target = this.__eventPathHasClass(path, 'material-btn')) {
       this.__materialBtn(e, target);
+    }
+  }
+
+  __parseBodyChange(e) {
+    let target;
+    let path = this.getEventPath(e);
+
+    if (target = this.__eventPathHasAttribute(path, 'data-prevent-default')) {
+      e.preventDefault();
+    }
+
+    if (target = this.__eventPathHasAttribute(path, 'data-change-event')) {
+      this.dispatch(target, target.dataset.changeEvent);
     }
   }
 
