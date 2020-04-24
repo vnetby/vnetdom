@@ -26,7 +26,7 @@ class DOM {
     this.body = this.document.body;
     this.window = window;
 
-    this.isDev = true;
+    this.debug = true;
 
     this.__initBodyClick();
     this.__initBodyChange();
@@ -704,7 +704,7 @@ class DOM {
   }
 
   __throwError(e) {
-    this.isDev && console.error(e);
+    this.debug && console.error(e);
   }
 
   __initBodyClick() {
