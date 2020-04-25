@@ -10,7 +10,7 @@ export const domLazyLoad = (sets = {}) => {
   if (!images || !images.length) return;
 
   checkImages(images);
-  
+
   dom.onWindowScroll(e => {
     checkImages(images);
   });
@@ -23,7 +23,7 @@ const checkImages = images => {
   let total = images.length;
   for (let i = 0; i < total; i++) {
     let img = images[i];
-    if (!img || img.classList.contains('inited') || !dom.isInViewport(img, img.dataset.margin)) continue;
+    if (!img || img.classList.contains('lazy-load') || !dom.isInViewport(img, img.dataset.margin)) continue;
     loadImage(img);
   }
 }
@@ -32,7 +32,7 @@ const checkImages = images => {
 
 
 const loadImage = div => {
-  dom.addClass(div, 'inited');
+  dom.addClass(div, 'lazy-load');
 
   let src = div.getAttribute('data-lazy');
   let alt = div.getAttribute('data-alt');
