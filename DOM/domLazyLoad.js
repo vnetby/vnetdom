@@ -35,6 +35,13 @@ const loadImage = div => {
   dom.addClass(div, 'lazy-load');
 
   let src = div.getAttribute('data-lazy');
+
+  if (div.hasAttribute('data-bg')) {
+    dom.addCss(div, { backgroundImage: `URL('${src}')` });
+    dom.addClass(div, 'loaded');
+    return;
+  }
+
   let alt = div.getAttribute('data-alt');
   let title = div.getAttribute('data-title');
   let className = div.getAttribute('class');
@@ -45,13 +52,35 @@ const loadImage = div => {
   if (title) attrs.title = title;
   if (className) attrs.className = className;
 
-  let img = dom.create('img', attrs);
 
-  img.addEventListener('load', e => {
+
+  loadImg(div, src, attrs).then(img => {
+
     div.parentNode.replaceChild(img, div);
     setTimeout(() => {
       dom.addClass(img, 'loaded');
     }, 15);
+
   });
-  img.src = src;
+
 }
+
+
+
+
+const loadImg = (div, src, attrs) => {
+  return new Promise((resolve, reject) => {
+    let img = dom.create('img', attrs);
+
+    img.addEventListener('load', e => {
+      resolve(img);
+
+    });
+    img.src = src;
+  });
+
+}
+
+
+
+
