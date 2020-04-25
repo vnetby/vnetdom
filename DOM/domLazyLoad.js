@@ -9,6 +9,8 @@ export const domLazyLoad = (sets = {}) => {
 
   if (!images || !images.length) return;
 
+  checkImages(images);
+  
   dom.onWindowScroll(e => {
     checkImages(images);
   });
