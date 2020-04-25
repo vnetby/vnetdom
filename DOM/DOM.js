@@ -65,13 +65,12 @@ class DOM {
   findFirst(selector, container) {
     if (!selector || typeof selector !== 'string') return false;
     container = this.getContainer(container);
-    try {
+
+    return this.__run(() => {
       let obj = container.querySelector(selector);
       return obj;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
+
   }
 
 
@@ -86,7 +85,8 @@ class DOM {
   findAll(selector, container) {
     if (!selector || typeof selector !== 'string') return false;
     container = this.getContainer(container);
-    try {
+
+    return this.__run(() => {
       let items = container.querySelectorAll(selector);
       if (items && items.length) {
         let res = [];
@@ -97,10 +97,8 @@ class DOM {
         return res;
       }
       return false;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
+
   }
 
 
@@ -113,13 +111,11 @@ class DOM {
 
   getContainer(container) {
     if (!container) return this.body;
-    if (this.isDom(container)) return container;
-    try {
+    return this.__run(() => {
+      if (this.isDom(container)) return container;
       container = this.findFirst(container);
-    } catch (e) {
-      this.__throwError(e);
-    }
-    return container ? container : this.body;
+      return container ? container : this.body;
+    });
   }
 
 
@@ -134,7 +130,7 @@ class DOM {
 
   strToDom(str, variables) {
     if (!str) return false;
-    try {
+    return this.__run(() => {
       if (typeof variables === 'object') {
         Object.keys(variables).forEach(varName => str = str.replace(new RegExp(`\{\{${varName}\}\}`, 'gs'), variables[varName]));
       }
@@ -148,10 +144,7 @@ class DOM {
         fragment.appendChild(node.cloneNode(true));
       }
       return fragment;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
@@ -166,10 +159,13 @@ class DOM {
    */
 
   execInlineScripts(el) {
-    try {
+    return this.__run(() => {
+
       this.getDomArray(el).forEach(item => {
+
         let scripts = this.findAll('script', item);
         if (!scripts) return;
+
         scripts.forEach(script => {
           if (script.hasAttribute('src')) {
             this.document.head.appendChild(this.create('script', { src: script.getAttribute('src') }));
@@ -177,10 +173,10 @@ class DOM {
             eval(script.innerHTML);
           }
         });
+
       });
-    } catch (e) {
-      this.__throwError(e);
-    }
+
+    });
   }
 
 
@@ -195,7 +191,7 @@ class DOM {
    */
 
   create(tag, attrs) {
-    try {
+    return this.__run(() => {
       let item = this.document.createElement(tag);
       if (!attrs) return item;
       if (typeof attrs === 'string') {
@@ -210,10 +206,7 @@ class DOM {
         return item;
       }
       return item;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
@@ -221,34 +214,28 @@ class DOM {
 
 
   next(el) {
-    try {
+    return this.__run(() => {
       el = this.getElement(el);
       let next = el.nextSibling;
       while (next && !this.isDom(next)) {
         next = next.nextSibling;
       }
       return this.isDom(next) ? next : false;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
 
 
   prev(el) {
-    try {
+    return this.__run(() => {
       el = this.getElement(el);
       let prev = el.previousSibling;
       while (prev && !this.isDom(prev)) {
         prev = prev.previousSibling;
       }
       return this.isDom(prev) ? prev : false;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
@@ -257,22 +244,19 @@ class DOM {
 
   getElement(el, container) {
     if (!el) return false;
-    try {
+    return this.__run(() => {
       container = this.getContainer(container);
       if (this.isDom(el)) return el;
       el = this.findFirst(el);
       return el ? el : false;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
 
 
   css(el, style = {}, container) {
-    try {
+    return this.__run(() => {
       this.getDomArray(el, container).forEach(item => {
         let css = '';
         for (let key in style) {
@@ -282,16 +266,13 @@ class DOM {
         css = css.trim();
         item.setAttribute('style', css);
       });
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
 
   addCss(el, style, container) {
-    try {
+    return this.__run(() => {
       this.getDomArray(el, container).forEach(item => {
         let css = item.getAttribute('style');
         css = css ? css : '';
@@ -304,9 +285,7 @@ class DOM {
         css = css.trim();
         item.setAttribute('style', css);
       });
-    } catch (e) {
-      this.__throwError(e);
-    }
+    });
   }
 
 
@@ -315,12 +294,7 @@ class DOM {
   hasCss(el, prop) {
     el = this.getElement(el);
     if (!el) return false;
-    try {
-      return !!el.style[this.__fromCamelCase(prop)];
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    return this.__run(() => !!el.style[this.__fromCamelCase(prop)]);
   }
 
 
@@ -329,13 +303,10 @@ class DOM {
   getCss(el, prop) {
     el = this.getElement(el);
     if (!el) return false;
-    try {
+    return this.__run(() => {
       let res = el.style[this.__fromCamelCase(prop)];
       return res ? res : false;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
@@ -344,31 +315,25 @@ class DOM {
   getStyle(el, prop) {
     el = this.getElement(el);
     if (!el) return false;
-    try {
+    return this.__run(() => {
       let style = this.window.getComputedStyle(el);
       let res = style[prop];
       return res ? res : false;
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
 
 
   setAttr(el, attrs = {}, container) {
-    try {
+    return this.__run(() => {
       this.getDomArray(el, container).forEach(item => {
         for (let key in attrs) {
           let attrName = this.__getAttrName(key);
           item.setAttribute(attrName, attrs[key]);
         }
       });
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
@@ -386,55 +351,31 @@ class DOM {
 
 
   jsonStringify(obj) {
-    let res = false;
-    try {
-      res = JSON.stringify(obj);
-    } catch (err) {
-      this.__throwError(err);
-    }
-    return res;
+    return this.__run(() => JSON.stringify(obj));
   }
 
 
 
 
   jsonParse(str) {
-    let res = false;
-    try {
-      res = JSON.parse(str);
-    } catch (err) {
-      this.__throwError(err);
-    }
-    return res;
+    return this.__run(() => JSON.parse(str));
   }
 
 
 
 
   ajax({ url, data, preloader, timeout, minTimeResponse, preloaderHTML }) {
+
     timeout = timeout ? timeout : 0;
     minTimeResponse = minTimeResponse ? minTimeResponse : 0;
 
     let type = data ? "post" : "get";
 
-    let requestData;
-
-    if (typeof data === "object") {
-      if (data instanceof FormData) {
-        requestData = data;
-      } else {
-        requestData = new FormData();
-        for (let key in data) {
-          requestData.append(key, data[key]);
-        }
-      }
-    }
+    let requestData = this.__getRequestData(data);
 
     if (preloader) {
       this.addPreloader(preloader, preloaderHTML);
     }
-
-
 
     return new Promise((resolve, reject) => {
 
@@ -479,6 +420,10 @@ class DOM {
 
     });
   }
+
+
+
+
 
 
 
@@ -529,7 +474,7 @@ class DOM {
 
   addClass(el, className, container) {
     if (!className) return false;
-    try {
+    return this.__run(() => {
       className = className.split(' ').map(name => name.trim());
       this.getDomArray(el, container).forEach(item => {
         className.forEach(newClass => {
@@ -537,10 +482,7 @@ class DOM {
           item.classList.add(newClass);
         });
       });
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
   }
 
 
@@ -548,7 +490,7 @@ class DOM {
 
   removeClass(el, className, container) {
     if (!className) return false;
-    try {
+    return this.__run(() => {
       className = className.split(' ').map(name => name.trim());
       this.getDomArray(el, container).forEach(item => {
         className.forEach(newClass => {
@@ -556,9 +498,7 @@ class DOM {
           item.classList.remove(newClass);
         });
       });
-    } catch (e) {
-      this.__throwError(e);
-    }
+    });
   }
 
 
@@ -584,7 +524,7 @@ class DOM {
 
   toggleClass(el, className) {
     if (!className) return false;
-    try {
+    return this.__run(() => {
       className = className.split(' ').map(name => name.trim());
       this.getDomArray(el).forEach(item => {
         className.forEach(newClass => {
@@ -595,9 +535,7 @@ class DOM {
           }
         });
       });
-    } catch (e) {
-      this.__throwError(e);
-    }
+    });
   }
 
 
@@ -605,7 +543,8 @@ class DOM {
   isInViewport(el, margin = 200) {
     el = this.getElement(el);
     if (!el) return false;
-    try {
+    margin = this.__getSizeValue(margin);
+    return this.__run(() => {
       let scroll = this.window.pageYOffset;
       let elTop = el.getBoundingClientRect().top;
       let elHeight = el.offsetHeight;
@@ -616,11 +555,7 @@ class DOM {
       let bottom = elTop + scroll + elHeight + margin;
 
       return scroll >= top && scroll <= bottom;
-
-    } catch (e) {
-      this.__throwError(e);
-      return false;
-    }
+    });
 
   }
 
@@ -692,62 +627,127 @@ class DOM {
   //             PRIVATE FUNCTIONS
   //============================================
 
+  __run(fn) {
+    let res = false;
+    try {
+      res = fn();
+    } catch (err) {
+      this.__throwError(err);
+      return false;
+    }
+    return res;
+  }
+
+
+  __getRequestData(data) {
+    if (!data) return false;
+    let requestData = false;
+    if (typeof data === "object") {
+      if (data instanceof FormData) {
+        requestData = data;
+      } else {
+        requestData = new FormData();
+        for (let key in data) {
+          requestData.append(key, data[key]);
+        }
+      }
+    }
+    return requestData;
+  }
+
+
+  __getSizeValue(val) {
+    if (!val) return 0;
+
+    if (val.toString().includes('vh')) {
+      val = parseFloat(val.replace(/[^\d\.]+/g, ""));
+      val = val * this.window.innerHeight / 100;
+      return val;
+    }
+
+    if (val.toString().includes('vw')) {
+      val = parseFloat(val.replace(/[^\d\.]+/g, ""));
+      val = val * this.window.innerWidth / 100;
+      return val;
+    }
+
+    return parseFloat(val);
+  }
+
   __getAttrName(attr) {
     if (!attr) return false;
     if (attr === 'className') return 'class';
     return this.__fromCamelCase(attr);
   }
 
+
   __fromCamelCase(str) {
     if (!str) return false;
     return str.replace(/\.?([A-Z])/g, (x, y) => "-" + y.toLowerCase()).replace(/^-/, "");
   }
 
+
   __throwError(e) {
     this.debug && console.error(e);
   }
+
 
   __initBodyClick() {
     this.body.addEventListener('click', this.__parseBodyClick.bind(this));
   }
 
+
   __initBodyChange() {
     this.body.addEventListener('change', this.__parseBodyChange.bind(this));
   }
 
+
   __parseBodyClick(e) {
-    let target;
     let path = this.getEventPath(e);
 
-    if (target = this.__eventPathHasAttribute(path, 'data-prevent-default')) {
-      e.preventDefault();
-    }
+    if (!path || !path.length) return;
 
-    if (target = this.__eventPathHasAttribute(path, 'data-click-event')) {
-      this.dispatch(target, target.dataset.clickEvent);
-    }
+    path.forEach(target => {
+      if (!target || !target.tagName) return;
 
-    if (target = this.__eventPathHasAttribute(path, 'data-toggle-class')) {
-      this.toggleClass(target, target.dataset.toggleClass);
-    }
+      if (target.hasAttribute('data-prevent-default')) {
+        e.preventDefault();
+      }
 
-    if (target = this.__eventPathHasClass(path, 'material-btn')) {
-      this.__materialBtn(e, target);
-    }
+      if (target.hasAttribute('data-click-event')) {
+        this.dispatch(target, target.dataset.clickEvent);
+      }
+
+      if (target.hasAttribute('data-toggle-class')) {
+        this.toggleClass(target, target.dataset.toggleClass);
+      }
+
+      if (target.classList.contains('material-btn')) {
+        this.__materialBtn(e, target);
+      }
+
+    });
   }
+
 
   __parseBodyChange(e) {
-    let target;
     let path = this.getEventPath(e);
 
-    if (target = this.__eventPathHasAttribute(path, 'data-prevent-default')) {
-      e.preventDefault();
-    }
+    if (!path || !path.length) return;
 
-    if (target = this.__eventPathHasAttribute(path, 'data-change-event')) {
-      this.dispatch(target, target.dataset.changeEvent);
-    }
+    path.forEach(target => {
+      if (!target || !target.tagName) return;
+
+      if (target.hasAttribute('data-prevent-default')) {
+        e.preventDefault();
+      }
+
+      if (target.hasAttribute('data-change-event')) {
+        this.dispatch(target, target.dataset.changeEvent);
+      }
+    });
   }
+
 
   __materialBtn(e, target) {
     let inkEl = this.findFirst('.ink', target);
@@ -761,30 +761,6 @@ class DOM {
     }
     this.addCss(inkEl, { left: `${e.offsetX - inkEl.offsetWidth / 2}px`, top: `${e.offsetY - inkEl.offsetHeight / 2}px` });
     this.addClass(inkEl, 'animate');
-  }
-
-  __eventPathHasAttribute(path, attr) {
-    let total = path.length;
-    if (!total) return false;
-
-    for (let i = 0; i < total; i++) {
-      let item = path[i];
-      if (!item || !item.tagName) continue;
-      if (item.hasAttribute(attr)) return item;
-    }
-    return false;
-  }
-
-  __eventPathHasClass(path, className) {
-    let total = path.length;
-    if (!total) return false;
-
-    for (let i = 0; i < total; i++) {
-      let item = path[i];
-      if (!item || !item.tagName) continue;
-      if (item.classList.contains(className)) return item;
-    }
-    return false;
   }
 
 }
