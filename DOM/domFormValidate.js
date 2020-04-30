@@ -39,7 +39,7 @@ const initValidate = form => {
 
 
 const initRemoveError = form => {
-  if ($) {
+  if (typeof $ !== 'undefined') {
     $(form).on('change', e => {
       let input = e.target;
       removeInputError(input);
@@ -48,7 +48,7 @@ const initRemoveError = form => {
       removeInputError(this);
     });
   } else {
-    form.addEventListner('change', e => {
+    form.addEventListener('change', e => {
       let input = e.target;
       removeInputError(input);
     });
