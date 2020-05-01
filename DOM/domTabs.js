@@ -55,7 +55,7 @@ const init = ({ wrap }) => {
     }
 
 
-    changeTab({ tabs, links, newTabId: newTabId, sets, slider });
+    changeTab({ tabs, links, newTabId: newTabId, sets, slider, wrap });
     changeActiveLink({ tabs, links, newLink: e.currentTarget, sets });
   });
 }
@@ -64,7 +64,7 @@ const init = ({ wrap }) => {
 
 
 
-const changeTab = ({ tabs, links, newTabId, sets, slider }) => {
+const changeTab = ({ tabs, links, newTabId, sets, slider, wrap }) => {
   clearTimeout(sets.hideTabTimer);
   clearTimeout(sets.showTabTimer);
 
@@ -75,7 +75,10 @@ const changeTab = ({ tabs, links, newTabId, sets, slider }) => {
 
   sets.current = newTabId;
 
+
   if (sets.current && tabs[sets.current]) {
+
+    dom.dispatch(wrap, 'dom-tab-change', { detail: sets });
 
     dom.addClass(currentTab, 'fadeOut animated');
 
