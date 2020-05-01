@@ -745,6 +745,10 @@ class DOM {
       if (target.hasAttribute('data-change-event')) {
         this.dispatch(target, target.dataset.changeEvent);
       }
+
+      if (target.hasAttribute('data-click-event')) {
+        this.dispatch(target, target.dataset.clickEvent);
+      }
     });
   }
 
