@@ -344,7 +344,9 @@ class DOM {
       bubbles: true, cancelable: true, detail: undefined, ...sets
     };
     let ev = new CustomEvent(e, realSets);
-    el.dispatchEvent(ev);
+    this.getDomArray(el).forEach(item => {
+      item.dispatchEvent(ev);
+    });
   }
 
 
