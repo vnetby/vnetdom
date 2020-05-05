@@ -629,6 +629,9 @@ class DOM {
   isSelector(el) {
     return el && typeof el === 'string';
   }
+  isYOverflow(el) {
+    return el.scrollHeight > el.offsetHeight;
+  }
 
 
 
