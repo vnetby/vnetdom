@@ -762,8 +762,12 @@ class DOM {
       this.css(inkEl, { width: `${size}px`, height: `${size}px` });
       target.appendChild(inkEl);
     }
-    this.addCss(inkEl, { left: `${e.offsetX - inkEl.offsetWidth / 2}px`, top: `${e.offsetY - inkEl.offsetHeight / 2}px` });
+    this.addCss(inkEl, { left: `${e.offsetX - inkEl.offsetWidth / 2}px`, top: `${e.offsetY - inkEl.offsetHeight / 2}px`, opacity: 1 });
     this.addClass(inkEl, 'animate');
+    inkEl.addEventListener('animationend', e => {
+      if (!inkEl.parentNode) return;
+      inkEl.parentNode.removeChild(inkEl);
+    });
   }
 
 }
