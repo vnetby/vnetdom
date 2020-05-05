@@ -25,6 +25,7 @@ class DOM {
     this.document = document;
     this.body = this.document.body;
     this.window = window;
+    this.scrollBarWidth = this.getScrollbarWidth();
 
     this.debug = true;
 
@@ -207,6 +208,13 @@ class DOM {
       }
       return item;
     });
+  }
+
+
+
+
+  getScrollbarWidth() {
+    return this.window.innerWidth - this.document.documentElement.clientWidth;
   }
 
 
