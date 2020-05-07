@@ -723,19 +723,19 @@ class DOM {
     path.forEach(target => {
       if (!target || !target.tagName) return;
 
-      if (target.hasAttribute('data-prevent-default')) {
+      if (target.hasAttribute && target.hasAttribute('data-prevent-default')) {
         e.preventDefault();
       }
 
-      if (target.hasAttribute('data-click-event')) {
+      if (target.hasAttribute && target.hasAttribute('data-click-event')) {
         this.dispatch(target, target.dataset.clickEvent);
       }
 
-      if (target.hasAttribute('data-toggle-class')) {
+      if (target.hasAttribute && target.hasAttribute('data-toggle-class')) {
         this.toggleClass(target, target.dataset.toggleClass);
       }
 
-      if (target.classList.contains('material-btn')) {
+      if (target.classList && target.classList.contains('material-btn')) {
         this.__materialBtn(e, target);
       }
 
