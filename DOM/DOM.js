@@ -673,7 +673,7 @@ class DOM {
     if (!val) return 0;
 
     if (val.toString().includes('vh')) {
-      val = parseFloat(val.replace(/[^\d\.]+/g, ""));
+      val = parseFloat(val.replace(/[^\d\-\+\.]+/g, ""));
       val = val * this.window.innerHeight / 100;
       return val;
     }
