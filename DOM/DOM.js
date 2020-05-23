@@ -361,14 +361,18 @@ class DOM {
 
 
   jsonStringify(obj) {
-    return this.__run(() => JSON.stringify(obj));
+    let res = this.__run(() => JSON.stringify(obj));
+    if (!res) return obj;
+    return res;
   }
 
 
 
 
   jsonParse(str) {
-    return this.__run(() => JSON.parse(str));
+    let res = this.__run(() => JSON.parse(str));
+    if (!res) return str;
+    return res;
   }
 
 
