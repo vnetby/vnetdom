@@ -362,7 +362,10 @@ class DOM {
 
   jsonStringify(obj) {
     let res = this.__run(() => JSON.stringify(obj));
-    if (!res) return obj;
+    if (!res) {
+      console.log(obj);
+      return false;
+    }
     return res;
   }
 
@@ -371,7 +374,10 @@ class DOM {
 
   jsonParse(str) {
     let res = this.__run(() => JSON.parse(str));
-    if (!res) return str;
+    if (!res) {
+      console.log(str);
+      return false;
+    }
     return res;
   }
 
