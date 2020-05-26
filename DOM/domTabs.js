@@ -27,8 +27,13 @@ const init = ({ wrap }) => {
   if (!links || !links.length) return;
   let tabs = {};
   let sets = {};
+  let useHash = wrap.dataset.hash === 'true';
 
-  sets.current = findCurrentTab({ links }) || links[0].getAttribute('href');
+  if (!useHash) {
+    sets.current = findCurrentTab({ links, useHash }) || links[0].getAttribute('href');
+  } else {
+    sets.current = getHashCurrentTab({ links });
+  }
 
   links.forEach(link => {
     let id = link.getAttribute('href');
@@ -37,6 +42,7 @@ const init = ({ wrap }) => {
     tabs[id] = tab;
   });
 
+  if (useHash) setHashCurrentTab({ tabs, currentId: sets.current });
 
   setTabsAnimationDuration({ tabs });
 
@@ -55,7 +61,7 @@ const init = ({ wrap }) => {
     }
 
 
-    changeTab({ tabs, links, newTabId: newTabId, sets, slider, wrap });
+    changeTab({ tabs, links, newTabId: newTabId, sets, slider, wrap, useHash });
     changeActiveLink({ tabs, links, newLink: e.currentTarget, sets });
   });
 }
@@ -64,7 +70,7 @@ const init = ({ wrap }) => {
 
 
 
-const changeTab = ({ tabs, links, newTabId, sets, slider, wrap }) => {
+const changeTab = ({ tabs, links, newTabId, sets, slider, wrap, useHash }) => {
   clearTimeout(sets.hideTabTimer);
   clearTimeout(sets.showTabTimer);
 
@@ -75,6 +81,9 @@ const changeTab = ({ tabs, links, newTabId, sets, slider, wrap }) => {
 
   sets.current = newTabId;
 
+  if (useHash) {
+    dom.window.location.hash = newTabId;
+  }
 
   if (sets.current && tabs[sets.current]) {
 
@@ -110,13 +119,39 @@ const changeActiveLink = ({ tabs, links, newLink, sets }) => {
 
 
 
-const findCurrentTab = ({ links }) => {
+const findCurrentTab = ({ links, useHash }) => {
   for (let i = 0; i < links.length; i++) {
     if (links[i].classList.contains(ACTIVE_LINK_CLASS)) return links[i].getAttribute('href');
   }
   return false;
 }
 
+
+
+
+const getHashCurrentTab = ({ links }) => {
+  let id = dom.window.location.hash;
+  dom.removeClass(links, 'active');
+  if (!id) {
+    dom.addClass(links[0], 'active');
+    return links[0].getAttribute('href');
+  }
+  for (let i = 0; i < links.length; i++) {
+    if (links[i].getAttribute('href') === id) {
+      dom.addClass(links[i], 'active');
+      return links[i].getAttribute('href');
+    }
+  }
+  dom.addClass(links[0], 'active');
+  return links[0].getAttribute('href');
+}
+
+
+
+const setHashCurrentTab = ({ tabs, currentId }) => {
+  dom.removeClass(Object.values(tabs), 'active');
+  dom.addClass(tabs[currentId], 'active');
+}
 
 
 const setTabsAnimationDuration = ({ tabs }) => {
