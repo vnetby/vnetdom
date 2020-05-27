@@ -78,7 +78,7 @@ const validate = form => {
 
 
 
-const validateInput = input => {
+export const validateInput = input => {
   if (hasInputError(input)) return false;
 
   let res = true;
