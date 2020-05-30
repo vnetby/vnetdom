@@ -91,6 +91,10 @@ export const validateInput = input => {
     res = validateEmail(input);
   }
 
+  if (res && input.type === 'file') {
+    res = validateFileInput(input);
+  }
+
   if (res && input.dataset.phone) {
     res = validatePhone(input);
   }
@@ -214,6 +218,46 @@ const validateEmail = input => {
     return false;
   }
   return true;
+}
+
+
+
+
+
+const validateFileInput = input => {
+  let fileList = getInptuFilelist(input);
+  let accept = getiNputAcceptExtensions(input);
+  if (!fileList || !accept) return true;
+  for (let i = 0; i < fileList.length; i++) {
+    let ext = getFileExtension(fileList[i]);
+    if (!accept.includes(ext)) {
+      addInputError(input, messages.notAllowedFileFormat);
+      input.value = '';
+      return false;
+    }
+  }
+  return true;
+}
+
+const getFileExtension = file => {
+  let name = file.name;
+  name = name.split('.');
+  name = name[name.length - 1];
+  return name;
+}
+
+const getiNputAcceptExtensions = input => {
+  let extensions = input.dataset.accept;
+  if (!extensions) return false;
+  extensions = extensions.split(',').map(item => item.replace(/[\s]+/g, "")).filter(item => item);
+  if (!extensions || !extensions.length) return false;
+  return extensions;
+}
+
+const getInptuFilelist = input => {
+  let fileList = input.files;
+  if (!fileList || !fileList.length) return false;
+  return fileList;
 }
 
 
