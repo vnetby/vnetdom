@@ -3,7 +3,7 @@ import { dom } from "./DOM";
 // if true will not validate form
 let DEBUG = false;
 
-let messages, addInputError, removeInputError;
+let messages, addInputError, removeInputError, afterValidate;
 
 
 export const domFormValidate = (sets = {}) => {
@@ -12,6 +12,7 @@ export const domFormValidate = (sets = {}) => {
   messages = sets.messages || {};
   addInputError = sets.addInputError;
   removeInputError = sets.removeInputError;
+  afterValidate = sets.afterValidate;
   DEBUG = sets.DEBUG;
 
   let forms = dom.findAll('.validate-form', container);
@@ -27,11 +28,13 @@ const initValidate = form => {
 
   dom.onClick('[type=submit]', e => {
     if (DEBUG) return;
+    e.preventDefault();
 
-    let isValid = validate(form);
-    if (!isValid) {
-      e.preventDefault();
-    }
+    validate(form)
+      .then(isValid => {
+        if (isValid) dom.dispatch(form, 'submit');
+      });
+
   }, form);
 }
 
@@ -60,25 +63,34 @@ const initRemoveError = form => {
 
 
 const validate = form => {
-  let inputs = dom.findAll('input, textarea, select', form);
-  if (!inputs || !inputs.length) return;
+  return new Promise((resolve, reject) => {
+    let inputs = dom.findAll('input, textarea, select', form);
+    if (!inputs || !inputs.length) return;
 
-  let errors = 0;
+    let errors = 0;
 
-  inputs.forEach(input => {
-    if (input.classList.contains('disabled')) return;
+    inputs.forEach(input => {
+      if (input.classList.contains('disabled')) return;
 
-    let res = validateInput(input);
-    if (!res) errors++;
+      let res = validateInput(input);
+      if (!res) errors++;
+    });
+
+    let isValid = errors > 0 ? false : true;
+
+    if (afterValidate) {
+      afterValidate(form, isValid).then(isValid => resolve(isValid));
+    } else {
+      resolve(isValid);
+    }
+
   });
-
-  return errors > 0 ? false : true;
 }
 
 
 
 
-export const validateInput = input => {
+const validateInput = input => {
   if (hasInputError(input)) return false;
 
   let res = true;
@@ -89,10 +101,6 @@ export const validateInput = input => {
 
   if (res && input.type === 'email') {
     res = validateEmail(input);
-  }
-
-  if (res && input.type === 'file') {
-    res = validateFileInput(input);
   }
 
   if (res && input.dataset.phone) {
@@ -218,46 +226,6 @@ const validateEmail = input => {
     return false;
   }
   return true;
-}
-
-
-
-
-
-const validateFileInput = input => {
-  let fileList = getInptuFilelist(input);
-  let accept = getiNputAcceptExtensions(input);
-  if (!fileList || !accept) return true;
-  for (let i = 0; i < fileList.length; i++) {
-    let ext = getFileExtension(fileList[i]);
-    if (!accept.includes(ext)) {
-      addInputError(input, messages.notAllowedFileFormat);
-      input.value = '';
-      return false;
-    }
-  }
-  return true;
-}
-
-const getFileExtension = file => {
-  let name = file.name;
-  name = name.split('.');
-  name = name[name.length - 1];
-  return name;
-}
-
-const getiNputAcceptExtensions = input => {
-  let extensions = input.dataset.accept;
-  if (!extensions) return false;
-  extensions = extensions.split(',').map(item => item.replace(/[\s]+/g, "")).filter(item => item);
-  if (!extensions || !extensions.length) return false;
-  return extensions;
-}
-
-const getInptuFilelist = input => {
-  let fileList = input.files;
-  if (!fileList || !fileList.length) return false;
-  return fileList;
 }
 
 
