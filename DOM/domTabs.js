@@ -42,7 +42,7 @@ const init = ({ wrap }) => {
     tabs[id] = tab;
   });
 
-  if (useHash) setHashCurrentTab({ tabs, currentId: sets.current, wrap });
+  if (useHash) setHashCurrentTab({ tabs, currentId: sets.current, wrap, sets });
 
   setTabsAnimationDuration({ tabs });
 
@@ -151,7 +151,7 @@ const getHashCurrentTab = ({ links }) => {
 const setHashCurrentTab = ({ tabs, currentId, wrap }) => {
   dom.removeClass(Object.values(tabs), 'active');
   dom.addClass(tabs[currentId], 'active');
-  dom.dispatch(wrap, 'dom-tab-change');
+  dom.dispatch(wrap, 'dom-tab-change', { detail: sets });
 }
 
 
