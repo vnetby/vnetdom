@@ -148,7 +148,7 @@ const getHashCurrentTab = ({ links }) => {
 
 
 
-const setHashCurrentTab = ({ tabs, currentId, wrap }) => {
+const setHashCurrentTab = ({ tabs, currentId, wrap, sets }) => {
   dom.removeClass(Object.values(tabs), 'active');
   dom.addClass(tabs[currentId], 'active');
   dom.dispatch(wrap, 'dom-tab-change', { detail: sets });
