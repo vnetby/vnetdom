@@ -452,7 +452,12 @@ class DOM {
     if (!preloaderHTML) return;
     container = this.getContainer(container);
 
-    let existPreloader = this.findFirst('.ajax-preloader', container);
+    let childs = this.childNodes(container);
+    let existPreloader = false;
+
+    if (childs) {
+      existPreloader = childs.some(item => item.classList.contains('ajax-preloader'));
+    }
 
     if (!existPreloader) {
       existPreloader = preloaderHTML;
@@ -460,6 +465,20 @@ class DOM {
     }
 
     dom.addClass(preloaderHTML, 'visible');
+  }
+
+
+
+
+
+  childNodes(container) {
+    let childs = container.childNodes;
+    let res = [];
+    for (let i = 0; i < childs.length; i++) {
+      if (!childs[i] || !childs[i].tagName) continue;
+      res.push(childs[i]);
+    }
+    return res.length ? res : false;
   }
 
 
