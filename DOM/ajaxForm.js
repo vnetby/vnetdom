@@ -31,7 +31,7 @@ const init = form => {
 
 const parseFormResponse = (res, form) => {
   if (parseResponse) {
-    parseResponse(res);
+    parseResponse(res, form);
     return;
   }
 
