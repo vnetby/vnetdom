@@ -1,12 +1,13 @@
 import { dom } from "./DOM";
 
-let preloader, createAlertModal, addInputError;
+let preloader, createAlertModal, addInputError, parseResponse;
 
 export const ajaxForm = (sets = {}) => {
 
   preloader = sets.preloader;
   createAlertModal = sets.createAlertModal;
   addInputError = sets.addInputError;
+  parseResponse = sets.parseResponse;
 
   dom.body.addEventListener('submit', e => {
     let form = e.target;
@@ -29,6 +30,11 @@ const init = form => {
 
 
 const parseFormResponse = (res, form) => {
+  if (parseResponse) {
+    parseResponse(res);
+    return;
+  }
+
   res = dom.jsonParse(res);
   if (!res) return false;
 
