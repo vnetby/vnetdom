@@ -119,6 +119,18 @@ export const validateInput = input => {
     res = validateMinLength(input);
   }
 
+  if (res && input.dataset.maxLength) {
+    res = validateMaxLength(input);
+  }
+
+  if (res && input.dataset.min) {
+    res = validateMin(input);
+  }
+
+  if (res && input.dataset.max) {
+    res = validateMax(input);
+  }
+
   // if (res) removeInputError(input);
   return res;
 }
@@ -130,6 +142,56 @@ const validateMinLength = input => {
   if (!min) return true;
   if (input.value.length < min) {
     addInputError(input, messages.minLength.replace(/\$1/, min));
+    return false;
+  }
+  return true;
+}
+
+
+
+
+
+const validateMaxLength = input => {
+  if (!input.value) return true;
+  let max = parseInt(input.dataset.maxLength);
+  if (!max) return true;
+  if (input.value.length > max) {
+    addInputError(input, messages.maxLength.replace(/\$1/, max));
+    return false;
+  }
+  return true;
+}
+
+
+
+
+
+const validateMin = input => {
+  let val = input.value;
+  if (!val && parseFloat(val) !== 0) return true;
+  val = parseFloat(val);
+  let min = parseFloat(input.dataset.min);
+  if (!min && min !== 0) return true;
+
+  if (val < min) {
+    addInputError(input, messages.minNumber.replace(/\$1/, min));
+    return false;
+  }
+  return true;
+}
+
+
+
+
+const validateMax = input => {
+  let val = input.value;
+  if (!val && parseFloat(val) !== 0) return true;
+  val = parseFloat(val);
+  let max = parseFloat(input.dataset.max);
+  if (!max && max !== 0) return true;
+
+  if (val > max) {
+    addInputError(input, messages.maxNumber.replace(/\$1/, max));
     return false;
   }
   return true;
