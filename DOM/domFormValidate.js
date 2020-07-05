@@ -223,7 +223,11 @@ const validateRequired = input => {
   }
 
   if (!input.value) {
-    addInputError(input, messages.required);
+    let msg = messages.required;
+    if (input.type === 'file') {
+      msg = messages.requiredFile;
+    }
+    addInputError(input, msg);
     return false;
   }
   return true;
