@@ -599,7 +599,11 @@ class DOM {
   }
 
 
-
+  on(event, selector, fn, where) {
+    this.getDomArray(selector, where).forEach(item => {
+      item.addEventListener(event, fn);
+    });
+  }
 
   onClick(selector, fn, where) {
     this.getDomArray(selector, where).forEach(item => {
