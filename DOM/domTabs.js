@@ -16,7 +16,7 @@ export const domTabs = container => {
   if (!wrappers || !wrappers.length) return;
   wrappers.forEach(wrap => {
     init({ wrap });
-  })
+  });
 }
 
 
@@ -62,7 +62,7 @@ const init = ({ wrap }) => {
 
 
     changeTab({ tabs, links, newTabId: newTabId, sets, slider, wrap, useHash });
-    changeActiveLink({ tabs, links, newLink: e.currentTarget, sets });
+    changeActiveLink({ tabs, links, newLink: e.currentTarget, sets, wrap });
   });
 }
 
@@ -73,6 +73,8 @@ const init = ({ wrap }) => {
 const changeTab = ({ tabs, links, newTabId, sets, slider, wrap, useHash }) => {
   clearTimeout(sets.hideTabTimer);
   clearTimeout(sets.showTabTimer);
+
+  if (!canChangeTab({ wrap })) return;
 
   dom.removeClass(Object.values(tabs), `fadeOut fadeIn animated`);
   dom.removeClass(Object.keys(tabs).filter(key => key !== sets.current).map(key => tabs[key]), `${ACTIVE_TAB_CLASS}`);
@@ -111,7 +113,29 @@ const changeTab = ({ tabs, links, newTabId, sets, slider, wrap, useHash }) => {
 
 
 
-const changeActiveLink = ({ tabs, links, newLink, sets }) => {
+
+const canChangeTab = ({ wrap }) => {
+  let breakMin = wrap.dataset.breakpointMin;
+
+  if (breakMin) {
+    breakMin = parseInt(breakMin);
+    if (dom.window.innerWidth < breakMin) return false;
+  }
+
+  let breakMax = wrap.dataset.breakpointMax;
+  if (breakMax) {
+    breakMax = parseInt(breakMax);
+    if (dom.window.innerWidth >= breakMax) return false;
+  }
+
+  return true;
+}
+
+
+
+
+const changeActiveLink = ({ tabs, links, newLink, sets, wrap }) => {
+  if (!canChangeTab({ wrap })) return;
   dom.removeClass(links, ACTIVE_LINK_CLASS);
   dom.addClass(newLink, ACTIVE_LINK_CLASS);
 }
