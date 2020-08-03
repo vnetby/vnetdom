@@ -201,6 +201,10 @@ class DOM {
       }
       if (typeof attrs === 'object') {
         for (let key in attrs) {
+          if (key === 'innerHTML') {
+            item.innerHTML = attrs[key];
+            continue;
+          }
           let attrName = this.__getAttrName(key);
           item.setAttribute(attrName, attrs[key]);
         }
