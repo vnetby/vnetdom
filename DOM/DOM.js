@@ -104,6 +104,11 @@ class DOM {
 
 
 
+
+
+
+
+
   /**
    * 
    * @param {*} container
@@ -201,10 +206,6 @@ class DOM {
       }
       if (typeof attrs === 'object') {
         for (let key in attrs) {
-          if (key === 'innerHTML') {
-            item.innerHTML = attrs[key];
-            continue;
-          }
           let attrName = this.__getAttrName(key);
           item.setAttribute(attrName, attrs[key]);
         }
@@ -452,6 +453,13 @@ class DOM {
 
 
 
+
+
+
+
+
+
+
   addPreloader(container, preloaderHTML) {
     if (!preloaderHTML) return;
     container = this.getContainer(container);
@@ -645,6 +653,14 @@ class DOM {
         fn(e);
       }, 5);
     })
+  }
+
+
+
+  each(selector, fn, where) {
+    this.getDomArray(selector, where).forEach(item => {
+      fn(item);
+    });
   }
 
 
