@@ -26,6 +26,8 @@ class DOM {
     this.body = this.document.body;
     this.window = window;
     this.scrollBarWidth = this.getScrollbarWidth();
+    this.location = this.document.location;
+    this.head = this.document.head;
 
     this.debug = true;
 
